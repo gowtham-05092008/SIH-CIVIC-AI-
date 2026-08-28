@@ -1,0 +1,10 @@
+{
+  "name":"CivicConnect AI",
+  "short_name":"CivicConnect",
+  "start_url":"/",
+  "display":"standalone",
+  "background_color":"#f5f7fb",
+  "theme_color":"#1f5eff",
+  "description":"24/7 AI-assisted civic issue reporting and resolution platform",
+  "icons":[]
+}
