@@ -754,3 +754,258 @@ button:disabled {
     padding: 23px 16px;
   }
 }
+/* =========================================================
+   CIVICCONNECT AI — FINAL UI/UX POLISH
+   ========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Better buttons */
+button {
+  font-family: inherit;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    opacity 0.18s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Primary buttons */
+.primary {
+  box-shadow: 0 8px 18px rgba(31, 94, 255, 0.18);
+}
+
+.primary:hover {
+  box-shadow: 0 10px 24px rgba(31, 94, 255, 0.28);
+}
+
+/* Cards */
+.card {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(24, 34, 51, 0.09);
+}
+
+/* Inputs */
+.form input,
+.form textarea,
+.form select,
+.actions input,
+.actions select,
+.auth input {
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.form input:focus,
+.form textarea:focus,
+.form select:focus,
+.actions input:focus,
+.actions select:focus,
+.auth input:focus {
+  outline: none;
+  border-color: #1f5eff;
+  box-shadow: 0 0 0 3px rgba(31, 94, 255, 0.12);
+}
+
+/* Navigation */
+nav button {
+  font-weight: 600;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+nav button:hover {
+  color: #1f5eff;
+}
+
+/* Status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  letter-spacing: 0.1px;
+}
+
+/* Better timeline */
+.timeline {
+  position: relative;
+}
+
+.timeline div {
+  position: relative;
+}
+
+.timeline div::before {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #1f5eff;
+  left: -21px;
+  top: 4px;
+  box-shadow: 0 0 0 4px #eef3ff;
+}
+
+/* Map */
+.map {
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+/* Empty states */
+.empty {
+  border: 1px dashed #d4dae5;
+  border-radius: 14px;
+  background: #fafbfc;
+}
+
+/* Authentication screen */
+.auth {
+  padding: 24px;
+}
+
+.authcard {
+  border: 1px solid rgba(227, 231, 239, 0.9);
+  box-shadow:
+    0 20px 60px rgba(25, 42, 70, 0.10),
+    0 4px 14px rgba(25, 42, 70, 0.05);
+}
+
+.authcard h1,
+.authcard h2 {
+  letter-spacing: -0.5px;
+}
+
+/* Login tabs */
+.switch {
+  padding: 4px;
+  background: #edf1f7;
+  border-radius: 12px;
+  gap: 4px;
+}
+
+.switch button {
+  border-radius: 9px;
+  margin: 0;
+  background: transparent;
+}
+
+.switch .sel {
+  box-shadow: 0 3px 10px rgba(31, 94, 255, 0.16);
+}
+
+/* Header */
+header {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+/* Better mobile experience */
+@media (max-width: 700px) {
+  body {
+    font-size: 15px;
+  }
+
+  header {
+    position: sticky;
+    padding: 13px 0;
+  }
+
+  header b {
+    font-size: 18px;
+  }
+
+  nav {
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  nav button {
+    white-space: nowrap;
+  }
+
+  .card {
+    border-radius: 14px;
+  }
+
+  .auth {
+    padding: 14px;
+  }
+
+  .authcard {
+    width: 100%;
+  }
+}
+
+/* Smooth page appearance */
+.app {
+  animation: pageFade 0.35s ease-out;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(31, 94, 255, 0.22);
+  outline-offset: 2px;
+}
+
+/* Prevent accidental horizontal overflow */
+img,
+iframe {
+  max-width: 100%;
+}
+
+* {
+  max-width: 100%;
+}
