@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import "./style.css";
 import IssueMap from "./components/IssueMap";
 
-const API="http://localhost:8000/api";
+const API = "https://sih-civic-ai-backend.onrender.com/api";
 const markerIcon = new L.Icon({iconUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",iconRetinaUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",shadowUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",iconSize:[25,41],iconAnchor:[12,41]});
 
 function App(){
@@ -34,7 +34,7 @@ function App(){
      setOtpSent(true);
      setMessage(d.development_otp?`Development OTP: ${d.development_otp}`:"OTP sent by SMS");
    }catch(e){
-     setMessage("Cannot connect to backend. Make sure FastAPI is running on http://127.0.0.1:8000.");
+     setMessage("Cannot connect to backend. Make sure FastAPI is running on https://sih-civic-ai-backend.onrender.com.");
      setOtpSent(false);
    }finally{setAuthLoading(false);}
  }
@@ -54,7 +54,7 @@ function App(){
      const u=d.user;
      localStorage.setItem("cc_user",JSON.stringify(u));setUser(u);setMessage("Signed in");
    }catch(e){
-     setMessage("Cannot connect to backend. Make sure FastAPI is running on http://127.0.0.1:8000.");
+     setMessage("Cannot connect to backend. Make sure FastAPI is running on https://sih-civic-ai-backend.onrender.com.");
    }finally{setAuthLoading(false);}
  }
  async function load(){if(!user)return;let a=await fetch(API+(user.role==="citizen"?`/reports/mine?citizen_id=${user.id}`:`/reports/authority?role=${encodeURIComponent(user.role)}&department=${encodeURIComponent(user.department||"")}`));setReports(await a.json());let p=await fetch(API+"/reports/public");setPublicReports(await p.json());if(user.role==="citizen"){let n=await fetch(API+`/notifications?user_id=${user.id}`);setNotifications(await n.json());}}

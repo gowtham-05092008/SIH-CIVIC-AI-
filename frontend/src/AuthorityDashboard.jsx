@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API = "http://localhost:8000/api";
+const API = "https://sih-civic-ai-backend.onrender.com/api";
 
 export default function AuthorityDashboard({ user, onLogout }) {
   const [actionLoading, setActionLoading] = useState(false);
