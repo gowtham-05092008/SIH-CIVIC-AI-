@@ -1,71 +1,181 @@
-# CivicConnect AI
+# 🏙️ CivicConnect AI
 
-A deployable MVP for 24/7 civic issue reporting and authority resolution.
+### AI-Powered Civic Issue Reporting and Resolution Platform
 
-## Included
-- Citizen phone + OTP authentication (development OTP shown in UI)
-- Photo/video upload
-- Description + category
-- Automatic browser geolocation
-- AI-style categorization, priority, duplicate detection and authority suggestion
-- Citizen report history and status timeline
-- Public nearby issue map/feed using OpenStreetMap + Leaflet
-- Authority login with phone + OTP
-- Roles: Super Admin, Department Manager, Field Officer
-- Authority queues, assignment, status updates and resolution notes
-- Browser push-style notifications via WebSocket
-- Twilio production OTP integration through environment variables
-- SQLite for local development; easy PostgreSQL switch later
+CivicConnect AI is a smart civic engagement platform that allows citizens to report public issues, track their resolution, and communicate with authorities through a centralized digital system.
 
-## Run locally
+The platform helps authorities organize, prioritize, and manage civic complaints efficiently while giving citizens transparency into the status of their reported issues.
 
-### Backend
-```bash
-cd backend
-python -m venv .venv
-# Windows:
-.venv\Scripts\activate
-# macOS/Linux:
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
-```
+---
+
+## 🚀 Live Demo
 
 ### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
+https://sih-civic-ai-frontend.onrender.com
 
-Open http://localhost:5173
+### Backend API
+https://sih-civic-ai-backend.onrender.com
 
-## Development OTP
-Use OTP `123456` for the built-in development flow. The API also returns a development OTP when SMS is not configured.
+### API Documentation
+https://sih-civic-ai-backend.onrender.com/docs
 
-## Production Twilio OTP
-Set:
-- TWILIO_ACCOUNT_SID
-- TWILIO_AUTH_TOKEN
-- TWILIO_FROM_NUMBER
+---
 
-Then set `USE_TWILIO=true`.
+# 🎯 Problem Statement
 
-For production, replace SQLite with PostgreSQL, put the API behind HTTPS, configure CORS, and deploy frontend/backend on always-on services.
+Citizens often face difficulties when reporting civic problems such as:
 
-## Map
-The app uses OpenStreetMap tiles through Leaflet. Follow OpenStreetMap tile usage policy and use a suitable tile provider for production scale.
+- 🕳️ Potholes
+- 💡 Broken streetlights
+- 🗑️ Garbage accumulation
+- 🚰 Water leakage
+- 🛣️ Damaged roads
+- 🌳 Public infrastructure issues
+- ⚠️ Other local civic problems
 
-## Important
-The included "AI engine" is deliberately dependency-light so the project runs immediately. It uses explainable keyword/rule scoring for categorization, priority, duplicates and authority routing. Replace `ai_engine.py` with an LLM/vision model when API credentials and a production model are selected.
+Traditional complaint systems can suffer from:
 
+- Lack of transparency
+- Slow complaint processing
+- Difficulty tracking complaints
+- Poor communication between citizens and authorities
+- Manual prioritization of issues
+- Fragmented complaint management
 
-## Free college/demo mode
+CivicConnect AI addresses these challenges through a unified digital platform.
 
-The default configuration uses `DEVELOPMENT_MODE=true` and `USE_TWILIO=false`.
+---
 
-- OTP is always `123456`
-- No SMS provider or payment is required
-- The OTP is shown in the login screen
-- Citizens receive in-app status notifications
-- Later, switch to Twilio Verify by setting `DEVELOPMENT_MODE=false`, `USE_TWILIO=true`, and `TWILIO_VERIFY_SERVICE_SID`.
+# 💡 Our Solution
+
+CivicConnect AI provides a complete workflow:
+
+Citizen
+↓
+Report Civic Issue
+↓
+AI-Assisted Classification
+↓
+Priority Assessment
+↓
+Location & Issue Information
+↓
+Authority Dashboard
+↓
+Issue Processing
+↓
+Status Updates
+↓
+Citizen Tracking
+
+This creates a transparent connection between citizens and civic authorities.
+
+---
+
+# ✨ Key Features
+
+## 👤 Citizen Module
+
+Citizens can:
+
+- Register/login using mobile number authentication
+- Report civic issues
+- Provide issue descriptions
+- Submit issue information
+- Track previously reported issues
+- View issue status
+- View issue locations
+- Receive notifications about updates
+
+---
+
+## 🏛️ Authority Module
+
+Authorities can:
+
+- Access reported civic issues
+- View complaint queues
+- Review issue information
+- Prioritize complaints
+- Update complaint status
+- Manage issue resolution
+- Monitor civic problems geographically
+
+---
+
+## 🤖 AI-Assisted Processing
+
+The platform includes an AI-assisted processing layer that can help organize reported civic problems.
+
+Potential AI capabilities include:
+
+- Issue classification
+- Category detection
+- Priority assessment
+- Complaint analysis
+- Intelligent routing
+- Future predictive civic analytics
+
+The AI layer is designed to reduce manual processing and help authorities focus on high-priority problems.
+
+---
+
+## 🗺️ Interactive Issue Map
+
+CivicConnect AI provides a map-based view of reported civic issues.
+
+Authorities and users can visualize issues based on their geographical location.
+
+This can help identify:
+
+- Issue hotspots
+- Repeated problems
+- Local infrastructure problems
+- High-density complaint areas
+
+---
+
+# 🔐 Authentication
+
+The prototype includes mobile-number-based authentication with OTP functionality.
+
+### Demo Mode
+
+For the hackathon prototype, OTP functionality can operate in demo mode.
+
+For production deployment, the system can be integrated with a service such as Twilio Verify or another secure OTP provider.
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                    ┌─────────────────────┐
+                    │       Citizen       │
+                    │    Web Interface    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   React Frontend    │
+                    │       + Vite        │
+                    └──────────┬──────────┘
+                               │ REST API
+                               ▼
+                    ┌─────────────────────┐
+                    │    FastAPI Backend  │
+                    └──────────┬──────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+              ▼                ▼                ▼
+      ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+      │  AI Engine   │ │   Database   │ │ Notification │
+      │              │ │              │ │    System    │
+      └──────────────┘ └──────────────┘ └──────────────┘
+              │                │                │
+              └────────────────┼────────────────┘
+                               ▼
+                    ┌─────────────────────┐
+                    │ Authority Dashboard │
+                    └─────────────────────┘
