@@ -16,6 +16,7 @@ import shutil, uuid
 Base.metadata.create_all(bind=engine)
 app = FastAPI(title="CivicConnect AI API")
 
+from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
     "http://localhost:5173",
