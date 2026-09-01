@@ -1,36 +1,15 @@
-async function authRequest(){
-  const cleanPhone = phone.trim();
-  if(!cleanPhone){ setMessage("Please enter a mobile number."); return; }
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 
-  setAuthLoading(true);
-  setMessage("");
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
 
-  try {
-    const formattedPhone = cleanPhone.startsWith("+") ? cleanPhone : `+${cleanPhone}`;
+const app = initializeApp(firebaseConfig);
 
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-        size: "invisible",
-        callback: () => {
-          console.log("Recaptcha solved");
-        }
-      });
-    }
-
-    const confirmation = await signInWithPhoneNumber(
-      auth,
-      formattedPhone,
-      window.recaptchaVerifier
-    );
-
-    window.confirmationResult = confirmation;
-    setOtpSent(true);
-    setMessage("OTP sent by SMS");
-  } catch (e) {
-    console.error(e);
-    setMessage("Could not send OTP. Check your Firebase phone auth setup.");
-    setOtpSent(false);
-  } finally {
-    setAuthLoading(false);
-  }
-}
+export const auth = getAuth(app);
