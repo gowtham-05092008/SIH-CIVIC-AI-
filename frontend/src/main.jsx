@@ -5,6 +5,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./style.css";
 import IssueMap from "./components/IssueMap";
+import { auth } from "./firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const API = "https://sih-civic-ai-backend.onrender.com/api";
 const markerIcon = new L.Icon({iconUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",iconRetinaUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",shadowUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",iconSize:[25,41],iconAnchor:[12,41]});
@@ -23,7 +25,6 @@ function App(){
    if(!cleanPhone){setMessage("Please enter a mobile number.");return;}
    setAuthLoading(true); setMessage("");
    try{
-     if(mode==="authority"){await fetch(API+"/dev/seed-authorities",{method:"POST"});}
      const r=await fetch(API+"/auth/request-otp",{
        method:"POST",
        headers:{"Content-Type":"application/json"},
@@ -32,7 +33,7 @@ function App(){
      const d=await r.json().catch(()=>({}));
      if(!r.ok){setMessage(d.detail||`Server error (${r.status})`);setOtpSent(false);return;}
      setOtpSent(true);
-     setMessage(d.development_otp?`Development OTP: ${d.development_otp}`:"OTP sent by SMS");
+     setMessage("OTP sent by SMS");
    }catch(e){
      setMessage("Cannot connect to backend. Make sure FastAPI is running on https://sih-civic-ai-backend.onrender.com.");
      setOtpSent(false);
@@ -63,6 +64,54 @@ function App(){
  if(!user) return <Auth mode={mode} setMode={setMode} phone={phone} setPhone={setPhone} code={code} setCode={setCode} otpSent={otpSent} request={authRequest} verify={authVerify} message={message} loading={authLoading}/>;
  return <div className="app"><header><div><b>🏙️ CivicConnect AI</b><span className="live">● 24/7 Civic Service</span></div><div>{user.name} · {user.role}<button onClick={()=>{localStorage.clear();setUser(null)}}>Logout</button></div></header>
    <nav>{user.role==="citizen"?<><button onClick={()=>setTab("report")}>Report Issue</button><button onClick={()=>setTab("mine")}>My Reports</button><button onClick={()=>setTab("map")}>Nearby Map</button><button onClick={()=>setTab("notifications")}>🔔 Updates {notifications.length?`(${notifications.length})`:""}</button></>:<><button onClick={()=>setTab("queue")}>Authority Queue</button><button onClick={()=>setTab("map")}>Public Map</button></>}</nav>
+   {tab === "report" && user.role === "Citizen" && (
+  <div className="card ai-card">
+    <div className="ai-header">
+      <div>
+        <div className="ai-title">🤖 AI-Assisted Complaint Analysis</div>
+        <div className="ai-subtitle">
+          CivicConnect AI automatically analyzes your complaint to improve
+          prioritization and routing.
+        </div>
+      </div>
+      <span className="ai-status">● AI READY</span>
+    </div>
+
+    <div className="ai-grid">
+      <div className="ai-feature">
+        <span>🧠</span>
+        <div>
+          <b>Issue Classification</b>
+          <small>Identifies the type of civic problem</small>
+        </div>
+      </div>
+
+      <div className="ai-feature">
+        <span>🚨</span>
+        <div>
+          <b>Priority Detection</b>
+          <small>Helps identify urgent complaints</small>
+        </div>
+      </div>
+
+      <div className="ai-feature">
+        <span>🏢</span>
+        <div>
+          <b>Authority Routing</b>
+          <small>Helps route complaints to the right department</small>
+        </div>
+      </div>
+
+      <div className="ai-feature">
+        <span>📍</span>
+        <div>
+          <b>Location Intelligence</b>
+          <small>Uses complaint location for better response</small>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
    {tab==="report"&&user.role==="citizen"&&<ReportForm user={user} onDone={()=>{setTab("mine");load()}}/>}
    {tab==="mine"&&<Reports reports={reports} citizen/>}
    {tab==="queue"&&<AuthorityQueue reports={reports} user={user} reload={load}/>}
@@ -71,7 +120,7 @@ function App(){
  </div>
 }
 
-function Auth(p){return <div className="auth"><div className="card authcard"><h1>🏙️ CivicConnect AI</h1><p>Report civic problems. Track resolution. Keep your city accountable.</p><div className="switch"><button className={p.mode==="citizen"?"sel":""} onClick={()=>{p.setMode("citizen");p.setCode("");p.setPhone("");}}>Citizen</button><button className={p.mode==="authority"?"sel":""} onClick={()=>{p.setMode("authority");p.setCode("");p.setPhone("");}}>Authority</button></div><input placeholder="Mobile number (+91...)" value={p.phone} onChange={e=>p.setPhone(e.target.value)} disabled={p.loading}/>{p.otpSent&&<input placeholder="OTP" inputMode="numeric" maxLength="6" value={p.code} onChange={e=>p.setCode(e.target.value)} disabled={p.loading}/>} {!p.otpSent?<button className="primary" onClick={p.request} disabled={p.loading}>{p.loading?"Sending...":"Send OTP"}</button>:<button className="primary" onClick={p.verify} disabled={p.loading}>{p.loading?"Verifying...":"Verify & Continue"}</button>}<small>{p.message}</small><p className="devnote">Demo mode: OTP is free and displayed here. Switch to Twilio Verify for production SMS.</p>{p.mode==="authority"&&<p className="hint">Demo authority numbers: 9000000001–9000000004. OTP: 123456.</p>}</div></div>}
+function Auth(p){return <div className="auth"><div className="card authcard"><h1>🏙️ CivicConnect AI</h1><p>Report civic problems. Track resolution. Keep your city accountable.</p><div className="switch"><button className={p.mode==="citizen"?"sel":""} onClick={()=>{p.setMode("citizen");p.setCode("");p.setPhone("");}}>Citizen</button><button className={p.mode==="authority"?"sel":""} onClick={()=>{p.setMode("authority");p.setCode("");p.setPhone("");}}>Authority</button></div><input placeholder="Mobile number (+91...)" value={p.phone} onChange={e=>p.setPhone(e.target.value)} disabled={p.loading}/>{p.otpSent&&<input placeholder="OTP" inputMode="numeric" maxLength="6" value={p.code} onChange={e=>p.setCode(e.target.value)} disabled={p.loading}/>} {!p.otpSent?<button className="primary" onClick={p.request} disabled={p.loading}>{p.loading?"Sending...":"Send OTP"}</button>:<button className="primary" onClick={p.verify} disabled={p.loading}>{p.loading?"Verifying...":"Verify & Continue"}</button>}<small>{p.message}</small><p className="devnote">Use real SMS delivery in production. Configure Twilio or your preferred OTP provider.</p>{p.mode==="authority"&&<p className="hint"></p>}</div></div>}
 
 function ReportForm({user,onDone}){const [f,setF]=useState({title:"",description:"",category:"Auto",latitude:"",longitude:"",media:null});const [msg,setMsg]=useState("");
  function locate(){navigator.geolocation.getCurrentPosition(x=>setF({...f,latitude:x.coords.latitude,longitude:x.coords.longitude}),()=>setMsg("Location permission denied."))}
