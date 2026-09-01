@@ -19,11 +19,11 @@ app = FastAPI(title="CivicConnect AI API")
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
+    "https://sih-civic-ai-frontend-h9dp.onrender.com",
     "http://localhost:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
-    "https://sih-civic-ai-frontend-h9dp.onrender.com",
 ]
 
 app.add_middleware(
