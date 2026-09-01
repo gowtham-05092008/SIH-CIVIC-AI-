@@ -46,10 +46,7 @@ def request_otp(data: OTPRequest, db: Session = Depends(get_db)):
     if data.role not in ("citizen", "authority"):
         raise HTTPException(400, "Invalid role")
     result = send_otp(db, data.phone)
-    response = {"message": "OTP sent", "mode": result.get("mode")}
-    if result.get("mode") == "development":
-        response["development_otp"] = result.get("otp")
-    return response
+    return {"message": "OTP sent", "mode": result.get("mode")}
 
 @app.post("/api/auth/verify")
 def verify(data: OTPVerify, db: Session = Depends(get_db)):
@@ -136,20 +133,6 @@ async def upload(file: UploadFile = File(...)):
     with open(path, "wb") as out:
         shutil.copyfileobj(file.file, out)
     return {"url": f"/uploads/{name}"}
-
-@app.post("/api/dev/seed-authorities")
-def seed_authorities(db: Session = Depends(get_db)):
-    demo = [
-        ("9000000001","System Admin","Super Admin",""),
-        ("9000000002","Road Manager","Department Manager","Roads & Engineering Department"),
-        ("9000000003","Field Officer","Field Officer","Roads & Engineering Department"),
-        ("9000000004","Sanitation Manager","Department Manager","Sanitation Department"),
-    ]
-    for phone,name,role,dept in demo:
-        if not db.query(User).filter(User.phone==phone).first():
-            db.add(User(phone=phone,name=name,role=role,department=dept))
-    db.commit()
-    return {"message":"Demo authority accounts seeded. Use OTP 123456."}
 
 def serialize_report(r):
     return {
