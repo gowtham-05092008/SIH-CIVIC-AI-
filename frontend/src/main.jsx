@@ -4,9 +4,6 @@ import {MapContainer,TileLayer,Marker,Popup} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./style.css";
-import IssueMap from "./components/IssueMap";
-import { auth } from "./firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const API = "https://sih-civic-ai-backend.onrender.com/api";
 const markerIcon = new L.Icon({iconUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",iconRetinaUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",shadowUrl:"https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",iconSize:[25,41],iconAnchor:[12,41]});
